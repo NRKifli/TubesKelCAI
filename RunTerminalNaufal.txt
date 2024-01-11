@@ -1,0 +1,14 @@
+#Set Direktori
+%cd /content/drive/MyDrive/Colaboratory/INTR-main
+
+#Menginstall Requirements
+!pip install -r requirements.txt
+
+#Evaluation (nilai batch_size diganti 24))
+!CUDA_VISIBLE_DEVICES=0 python -m torch.distributed.launch --nproc_per_node=1 --master_port 12345 --use_env main.py --eval --resume="/content/drive/MyDrive/Colaboratory/INTR-main/models/intr_checkpoint_cub_detr_r50.pth" --batch_size="24" --dataset_path="/content/drive/MyDrive/Colaboratory/INTR-main/datasets/CUBDatasets" --dataset_name="CUBDTSSS"
+
+#Training 50 CUB Class
+!CUDA_VISIBLE_DEVICES=0 python -m torch.distributed.launch --nproc_per_node=1 --master_port 12345 --use_env main.py --finetune="/content/drive/MyDrive/Colaboratory/INTR-main/models/detr-r50-e632da11.pth" --batch_size="5" --epochs="100" --dataset_path="/content/drive/MyDrive/Colaboratory/INTR-main/datasets/CUBDatasets" --dataset_name="CUBDTSSS" --num_queries="3"
+
+#Interpretasi INTR
+!python -m tools.visualization --eval --resume="/content/drive/MyDrive/Colaboratory/INTR-main/models/intr_checkpoint_cub_detr_r50.pth" --dataset_path="/content/drive/MyDrive/Colaboratory/INTR-main/datasets/CUBDatasets" --dataset_name="CUBDTSSS" --class_index="0"
